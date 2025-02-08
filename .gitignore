@@ -1,0 +1,34 @@
+# Binaries & build artifacts
+*.exe
+*.out
+*.so
+*.dll
+*.dmg
+*.app
+*.a
+*.o
+
+# Go specific
+bin/
+pkg/
+cover.out
+*.test
+
+# Dependency management
+vendor/
+go.sum
+
+# Logs & temp files
+*.log
+tmp/
+*.swp
+*.swo
+
+# IDE/editor specific
+.vscode/
+.idea/
+*.iml
+
+# OS-generated files
+.DS_Store
+Thumbs.db
