@@ -12,10 +12,18 @@ func main() {
 	config.LoadEnv()
 
 	// Init PSQL Connection
-	app.InitDatabase()
+	db := app.InitDatabase()
 
+	// Init components
+	repository := app.InitRepository(db)
+	service := app.InitService(repository)
+	handler := app.InitHandler(service)
+
+	// Routers
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.HomeHandler)
+	mux.HandleFunc("/ping", handler.Ping)
+	mux.HandleFunc("/create", handler.Create)
+	mux.HandleFunc("/{shortKey}", handler.Redirect)
 
 	port := config.GetEnv(config.EnvServerPort, ":8080")
 	log.Println("Server running at port" + port)
