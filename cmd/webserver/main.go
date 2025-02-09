@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"short_url/config"
 	"short_url/internal/app"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -20,12 +22,12 @@ func main() {
 	handler := app.InitHandler(service)
 
 	// Routers
-	mux := http.NewServeMux()
-	mux.HandleFunc("/ping", handler.Ping)
-	mux.HandleFunc("/create", handler.Create)
-	mux.HandleFunc("/{shortKey}", handler.Redirect)
+	router := mux.NewRouter()
+	router.Handle("/ping", app.LoggingMiddleware(http.HandlerFunc(handler.Ping)))
+	router.Handle("/create", app.LoggingMiddleware(http.HandlerFunc(handler.Create)))
+	router.Handle("/{key}", app.LoggingMiddleware(http.HandlerFunc(handler.Redirect)))
 
 	port := config.GetEnv(config.EnvServerPort, ":8080")
 	log.Println("Server running at port" + port)
-	log.Fatal(http.ListenAndServe(port, mux))
+	log.Fatal(http.ListenAndServe(port, router))
 }
