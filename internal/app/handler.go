@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 // Handler represents the handler for the API
@@ -18,13 +20,14 @@ func InitHandler(service *Service) *Handler {
 
 // Ping hadnles the /ping endpoint and responds with "Pong!" to indicate that the server is running
 func (handler *Handler) Ping(writer http.ResponseWriter, request *http.Request) {
+	// Validating the request method, should be GET
 	handleHttpMethod(writer, request, http.MethodGet)
 	handleSuccessResponse(writer, "Pong!", nil)
 }
 
 // Create handles the /create endpoint and processes the creation of a short link.
 func (handler *Handler) Create(writter http.ResponseWriter, request *http.Request) {
-	// Validating the request method
+	// Validating the request method, should be POST
 	handleHttpMethod(writter, request, http.MethodPost)
 
 	// CreateShortLinkRequest struct to hold the request payload
@@ -43,7 +46,21 @@ func (handler *Handler) Create(writter http.ResponseWriter, request *http.Reques
 
 // Redirect handles the /redirect endpoint and processes the redirection to full url based on the key from short url.
 func (handler *Handler) Redirect(writter http.ResponseWriter, request *http.Request) {
+	// Validating the request method, should be GET
 	handleHttpMethod(writter, request, http.MethodGet)
+	vars := mux.Vars(request)
+	shortKey := vars["key"]
+
+	// GetTargetUrl method from the service layer
+	targetUrl, error := handler.service.GetTargetUrl(shortKey)
+	// Handle and return error if any
+	if error != nil {
+		handleErrorResponse(writter, http.StatusNotFound, error.Error())
+		return
+	}
+
+	// Redirect to target url
+	http.Redirect(writter, request, targetUrl, http.StatusMovedPermanently)
 }
 
 // handleSuccessResponse sends a successful JSON response with the given message and data.

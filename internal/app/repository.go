@@ -36,3 +36,17 @@ func (repository *Repository) CreateMasterUrl(key string, targetUrl string) (*Ma
 	// Return the created record
 	return &entity, nil
 }
+
+// FindByKey finds a master URL Record by the given short key
+func (repository *Repository) FindByKey(key string) (*MasterUrl, error) {
+	var entity MasterUrl
+	// Find master url record by key
+	error := repository.DB.Where("key = ?", key).First(&entity).Error
+	// Handle DB Error, if any
+	if error != nil {
+		return nil, error
+	}
+
+	// Return the found record
+	return &entity, nil
+}

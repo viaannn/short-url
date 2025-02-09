@@ -27,6 +27,7 @@ func main() {
 	router.Handle("/create", app.LoggingMiddleware(http.HandlerFunc(handler.Create)))
 	router.Handle("/{key}", app.LoggingMiddleware(http.HandlerFunc(handler.Redirect)))
 
+	// Start the server
 	port := config.GetEnv(config.EnvServerPort, ":8080")
 	log.Println("Server running at port" + port)
 	log.Fatal(http.ListenAndServe(port, router))

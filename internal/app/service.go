@@ -28,6 +28,7 @@ func (service *Service) CreateMasterUrl(request CreateShortLinkRequest) (*Create
 
 	// CreateMasterUrl method from the repository layer to Insert new record in the database
 	createdData, dbError := service.repository.CreateMasterUrl(key, request.TargetUrl)
+	// Handle and return DB Error, if any
 	if dbError != nil {
 		return nil, dbError
 	}
@@ -42,6 +43,14 @@ func (service *Service) CreateMasterUrl(request CreateShortLinkRequest) (*Create
 	}, nil
 }
 
-func (service *Service) RedirectTargetUrl(key string) error {
-	return nil
+// GetTargetUrl returns the target URL based on the short link key
+func (service *Service) GetTargetUrl(key string) (string, error) {
+	// FindByKey method from the repository layer to get the target URL based on the short link key
+	entity, dbError := service.repository.FindByKey(key)
+	// Handle and return DB Error, if any
+	if dbError != nil {
+		return "", dbError
+	}
+
+	return entity.TargetUrl, nil
 }
