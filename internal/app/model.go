@@ -3,7 +3,7 @@ package app
 import "time"
 
 type MasterUrl struct {
-	Key         string     `gorm:"primaryKey", json:"key"`
+	Key         string     `gorm:"primaryKey" json:"key"`
 	TargetUrl   string     `json:"target_url"`
 	CreatedDate *time.Time `json:"created_date"`
 }
