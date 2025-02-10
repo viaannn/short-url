@@ -6,13 +6,21 @@ import (
 	"gorm.io/gorm"
 )
 
+// IRepository represents the repository interface
+type IRepository interface {
+	CreateMasterUrl(key string, targetUrl string) (*MasterUrl, error)
+	FindByKey(key string) (*MasterUrl, error)
+}
+
 // Repository represents the repository layer
 type Repository struct {
 	DB *gorm.DB
 }
 
+var _ IRepository = (*Repository)(nil) // Compile-time check
+
 // InitRepository initializes the repository component
-func InitRepository(db *gorm.DB) *Repository {
+func InitRepository(db *gorm.DB) IRepository {
 	return &Repository{db}
 }
 

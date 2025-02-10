@@ -10,11 +10,11 @@ import (
 
 // Service represents the service layer
 type Service struct {
-	repository *Repository
+	repository IRepository
 }
 
 // InitService initializes the service component
-func InitService(repository *Repository) *Service {
+func InitService(repository IRepository) *Service {
 	return &Service{repository}
 }
 
