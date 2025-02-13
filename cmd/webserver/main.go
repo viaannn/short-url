@@ -23,8 +23,8 @@ func main() {
 
 	// Routers
 	router := mux.NewRouter()
-	router.Handle("/ping", app.LoggingMiddleware(http.HandlerFunc(handler.Ping)))
-	router.Handle("/create", app.LoggingMiddleware(http.HandlerFunc(handler.Create)))
+	router.Handle("/amour/v1/ping", app.LoggingMiddleware(http.HandlerFunc(handler.Ping)))
+	router.Handle("/amour/v1/create", app.LoggingMiddleware(http.HandlerFunc(handler.Create)))
 	router.Handle("/{key}", app.LoggingMiddleware(http.HandlerFunc(handler.Redirect)))
 
 	// Start the server
